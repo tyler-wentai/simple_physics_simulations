@@ -1,0 +1,82 @@
+###--------------------------------------------------------------###
+#                                                                  #
+#  Very simple solver and animator for the 1D heat equation for a  #
+#  rod using a forward-time center-space (FTCS) finite difference  #
+#  equation. To ensure numerical stability in the solutions, the   #
+#  value of dt is constrained to be dt <= dx^2/(2*sigma). So, if   #
+#  you feel curious and would like to manipulate the values of dx  #
+#  and sigma (the thermal diffusivity), you may do so but you      #
+#  must also ensure that the above constraint is maintained.       #
+#                                                                  #
+#  Program Author: Tyler E. Bagwell                                #
+#  Data Last Modified: 2018/06/18                                  #
+#                                                                  #
+###--------------------------------------------------------------###
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import animation
+
+### --- Variables and Inputs --- ###
+
+xi, xf = 0, 10              # Rod position domain
+L = xf - xi                 # Length of rod
+
+J = 101                     # Number of divisions of rod domain
+dx = L/J                    # Size of rod domain divisions
+
+u0, uL = 0, 0               # B.C. Temperature at x=0 and B.C. Temperature at x=L
+
+dt = 0.001                  # Time step (!)
+
+sigma = 1                   # Thermal diffusivity
+
+### --- Initialize --- ###
+
+u_temp = np.array([5. for i in range(J)])       # Initial temperature function u(x) of the rod
+u_init = u_temp
+u_temp[0] = u0                                  # Applying 1st B.C.
+u_temp[J-1] = uL                                # Applying 2nd B.C.
+
+A_matrix = np.array([[0. for i in range(len(u_temp))] for j in range(len(u_temp))]) # Coeffiecient Matrix
+
+A_matrix[0][0] = 1                              # Applying 1st B.C.            
+A_matrix[J-1][J-1] = 1                          # Applying 2nd B.C.
+
+alpha = ((dt*sigma)/dx**2)                      # FTCS Finite Difference Coefficient
+
+for r in range(1,J-1,1):
+    for c in range(0,J,1):
+        if r == c:
+            A_matrix[r][c] = (1-2*alpha)
+        if c == r + 1:
+            A_matrix[r][c] = alpha
+        if r == c + 1:
+            A_matrix[r][c] = alpha
+
+
+### --- Animation --- ###
+
+fig = plt.figure()
+ax = plt.axes(xlim=(xi, xf), ylim=(0, 10))
+plt.xlabel('x position of rod'), plt.ylabel('temperature')
+plt.title('1D Heat Equation Solver for a Rod')
+line, = ax.plot([], [], lw=2,color='r')
+
+def init():
+    line.set_data([], [])
+    return line,
+    
+def update(i):
+    global A_matrix, u_temp, u_init
+    x = np.linspace(xi,xf,J)
+    u_temp = np.dot(A_matrix,u_temp)
+    y = u_temp
+    line.set_data(x, y)
+    return line,
+
+anim = animation.FuncAnimation(fig, update, init_func=init, frames=10000, interval=20, blit=True)
+plt.show()
+
+
