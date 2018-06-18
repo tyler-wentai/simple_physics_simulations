@@ -3,13 +3,13 @@
 #  Very simple solver and animator for the 1D heat equation for a  #
 #  rod using a forward-time center-space (FTCS) finite difference  #
 #  equation. To ensure numerical stability in the solutions, the   #
-#  value of dt is constrained to be dt <= dx^2/(2*sigma). So, if   #
+#  value of dt is constrained to be dt <= dx^2/(2*sigma)! So, if   #
 #  you feel curious and would like to manipulate the values of dx  #
 #  and sigma (the thermal diffusivity), you may do so but you      #
 #  must also ensure that the above constraint is maintained.       #
 #                                                                  #
 #  Program Author: Tyler E. Bagwell                                #
-#  Data Last Modified: 2018/06/18                                  #
+#  Date Last Modified: 2018/06/18                                  #
 #                                                                  #
 ###--------------------------------------------------------------###
 
@@ -28,11 +28,11 @@ dx = L/J                    # Size of rod domain divisions
 
 u0, uL = 0, 0               # B.C. Temperature at x=0 and B.C. Temperature at x=L
 
-dt = 0.001                  # Time step (!)
+dt = 0.001                  # Time step (!!!)
 
-sigma = 1                   # Thermal diffusivity
+sigma = 1                   # Thermal diffusivity (assumed to be constant t/o the rod)
 
-### --- Initialize --- ###
+### --- Initialization --- ###
 
 u_temp = np.array([5. for i in range(J)])       # Initial temperature function u(x) of the rod
 u_init = u_temp
