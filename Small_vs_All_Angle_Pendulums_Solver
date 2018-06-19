@@ -12,11 +12,11 @@
 #  of this program is decently accurate for a few oscillation      #
 #  periods. Further exploration with this program might be         #
 #  concerned with evaluating the stability of the Runge-Kutta      #
-#  method and accurately determing the critical value of the       #
+#  method and accurately determining the critical value of the     #
 #  time-step that causes instability in the solutions. This        #
 #  program is designed to show the limit of the small-angle        #
 #  approximation and show that the period of the simple pendulum   #
-#  is in fact dependent on the initial angle (intial amplitude).   #
+#  is in fact dependent on the initial angle (initial amplitude).  #
 #                                                                  #
 #  Program Author: Tyler E. Bagwell                                #
 #  Date Last Modified: 2018/05/19                                  #
@@ -42,7 +42,7 @@ g = 9.81                        # Gravitational acceleration
 class Pendulum(object):
     
         def __init__(self, length, init_angle):
-            # Both pendulums are initialized with the same initial angle and intial angular velocities 
+            # Both pendulums are initialized with the same initial angle and initial angular velocities 
             self.length = length
             self.phiA = init_angle      # Initialize initial angle of nonlinear pendulum (A)
             self.phiAdot = 0            # Initialize initial angular velocity of nonlinear pendulum (A)
