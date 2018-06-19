@@ -1,0 +1,127 @@
+###--------------------------------------------------------------###
+#                                                                  #
+#  Small-Angle vs. All-Angle Solver for a Simple Pendulum:         #
+#                                                                  #
+#  Below is a simple program that solves, animates, and compares   #
+#  the two SODEs (one linear, one nonlinear) for the small-angle   #
+#  SODE and the all-angle SODE for simple pendulums with           #
+#  identical initial angles. The SODEs were solved using paired    #
+#  4th-order Runge-Kutta schemes. It was discovered that the       #
+#  that the nonlinear SODE (all-angle) is unstable for             #
+#  relatively large values of the time-step. The current version   #
+#  of this program is decently accurate for a few oscillation      #
+#  periods. Further exploration with this program might be         #
+#  concerned with evaluating the stability of the Runge-Kutta      #
+#  method and accurately determing the critical value of the       #
+#  time-step that causes instability in the solutions. This        #
+#  program is designed to show the limit of the small-angle        #
+#  approximation and show that the period of the simple pendulum   #
+#  is in fact dependent on the initial angle (intial amplitude).   #
+#                                                                  #
+#  Program Author: Tyler E. Bagwell                                #
+#  Date Last Modified: 2018/05/19                                  #
+#                                                                  #
+###--------------------------------------------------------------###
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import animation
+
+### --- Constants and Inputs --- ###
+
+dt = 0.002                      # Time-step (dt = 0.001 does pretty well for a few periods)
+len = 1                         # Length of the period
+theta0 = np.pi/4                # Initial angle of the pendulums (radians)
+degrees = theta0 * (180/np.pi)  # Initial angle of the pendulums (degrees)
+g = 9.81                        # Gravitational acceleration 
+
+
+### --- Build Pendulum Class --- ###
+
+class Pendulum(object):
+    
+        def __init__(self, length, init_angle):
+            # Both pendulums are initialized with the same initial angle and intial angular velocities 
+            self.length = length
+            self.phiA = init_angle      # Initialize initial angle of nonlinear pendulum (A)
+            self.phiAdot = 0            # Initialize initial angular velocity of nonlinear pendulum (A)
+            self.phiB = init_angle      # Initialize initial angle of linear pendulum (B)
+            self.phiBdot = 0            # Initialize initial angular velocity of linear pendulum (B)
+            self.xposition = [[0, self.length*np.sin(self.phiA)],[0,self.length*np.sin(self.phiB)]]
+            self.yposition = [[0, -self.length*np.cos(self.phiA)],[0,-self.length*np.cos(self.phiB)]]
+            
+        def motion(self):
+            ### 4th-order Runga-Kutta for each pendulum 
+            global dt, g 
+            
+            ### Coefficients for Pendulum (A)
+            A1 = -dt*(g/self.length)*np.sin(self.phiA)
+            A2 = -dt*(g/self.length)*np.sin(self.phiA + A1/2)
+            A3 = -dt*(g/self.length)*np.sin(self.phiA + A2/2)
+            A4 = -dt*(g/self.length)*np.sin(self.phiA + A3)
+            
+            a1 = dt*(self.phiAdot)
+            a2 = dt*(self.phiAdot + a1/2)
+            a3 = dt*(self.phiAdot + a2/2)
+            a4 = dt*(self.phiAdot + a3)
+            
+            ### Coefficients for Pendulum (B)
+            B1 = -dt*(g/self.length)*(self.phiB)
+            B2 = -dt*(g/self.length)*(self.phiB + B1/2)
+            B3 = -dt*(g/self.length)*(self.phiB + B2/2)
+            B4 = -dt*(g/self.length)*(self.phiB + B3)
+            
+            b1 = dt*(self.phiBdot)
+            b2 = dt*(self.phiBdot + b1/2)
+            b3 = dt*(self.phiBdot + b2/2)
+            b4 = dt*(self.phiBdot + b3)
+            
+            ### Update angles and angular velocities for both pendulums 
+            self.phiAdot += (1/6)*(A1 + 2*A2 + 2*A3 + A4)
+            self.phiA += (1/6)*(a1 + 2*a2 + 2*a3 + a4)
+            self.phiBdot += (1/6)*(B1 + 2*B2 + 2*B3 + B4)
+            self.phiB += (1/6)*(b1 + 2*b2 + 2*b3 + b4)
+            
+            ### Update positions for both pendulums 
+            self.xposition[0][1] = np.sin(self.phiA)
+            self.yposition[0][1] = -np.cos(self.phiA)
+            self.xposition[1][1] = np.sin(self.phiB)
+            self.yposition[1][1] = -np.cos(self.phiB)
+            
+            return self.xposition, self.yposition
+            
+### --- Initialization --- ###
+
+pendulum = Pendulum(len,theta0)
+
+### --- Animation --- ###
+
+fig = plt.figure()
+ax = fig.add_subplot(111, aspect='equal', autoscale_on=False, xlim=(-1.2*len, 1.2*len), ylim=(-1.2*len, 1.2*len))
+plt.title('Small-Angle vs. All-Angle Solutions for a Simple Pendulum')
+plt.suptitle('Initial Angle: {a} (degrees)' .format(a=degrees))
+line, = ax.plot([], [], 'o-', lw=2, color='green')
+
+
+def init():
+    line.set_data([], [])
+    return line, 
+    
+def update(i):
+    x,y = pendulum.motion()
+    line.set_data(x,y)
+    return line, 
+
+anim = animation.FuncAnimation(fig, update, init_func=init, frames=200, interval=10, blit=True)
+plt.show()
+
+
+
+
+
+
+
+
+
+
