@@ -1,0 +1,239 @@
+### Trivially simple 2D random walker 
+### [Python 3.6]
+
+import numpy as np
+import random as random
+import matplotlib.pyplot as plt
+
+
+
+class RandomWalker(object):
+
+    grid_length = 21            # number of vertices per side [use odd numbers]
+    x_max, x_min = grid_length-1, 0
+    y_max, y_min = grid_length-1, 0
+    dx, dy = 1, 1
+    
+    def __init__(self):
+    
+        print('Random walker created.')
+        self.position = [[(self.grid_length-1)/2, (self.grid_length-1)/2]]
+    
+    def display(self):
+    
+        x, y = [], []
+    
+        for i in range(len(self.position)):
+            x.append(self.position[i][0])
+            y.append(self.position[i][1])
+        
+        plt.plot(x,y,'o-',markersize=2.0)
+        plt.xlim(self.x_min - self.dx, self.x_max + self.dx)
+        plt.ylim(self.y_min - self.dy, self.y_max + self.dy)
+        plt.grid()
+        plt.axes().set_aspect('equal')
+        plt.show()
+        
+    def random_motion(self):
+    
+        random_number = random.randrange(1,5)
+        
+        if random_number == 1:      # movement up ---------------
+            x = self.position[-1][0]
+            y = self.position[-1][1] + self.dy
+            
+            #### Test for upper boundary --------------
+            if y > self.y_max:
+            
+                if self.position[-1] == [self.x_max, self.y_max]:
+                
+                    random_edge_number = random.randrange(1,3)
+                   
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] - self.dx
+                        y = self.position[-1][1]
+                    
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] - self.dy
+                    
+                elif self.position[-1] == [self.x_min, self.y_max]:
+                
+                    random_edge_number = random.randrange(1,3)
+                    
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] + self.dx
+                        y = self.position[-1][1]
+                    
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] - self.dy
+            
+                else:
+                    random_edge_number = random.randrange(1,4)
+                
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] - self.dx
+                        y = self.position[-1][1]
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0]
+                        y = self.position[-1][1] - self.dy
+                    elif random_edge_number == 3:
+                        x = self.position[-1][0] + self.dx
+                        y = self.position[-1][1] 
+            
+            self.position.append([x,y])
+        
+        elif random_number == 2:    # movement to right ---------------
+            
+            x = self.position[-1][0] + self.dx
+            y = self.position[-1][1]
+ 
+            #### Test for right boundary --------------
+            if x > self.x_max:
+            
+                if self.position[-1] == [self.x_max, self.y_min]:
+                
+                    random_edge_number = random.randrange(1,3)
+                   
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] - self.dx
+                        y = self.position[-1][1]
+                    
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] + self.dy
+                    
+                elif self.position[-1] == [self.x_max, self.y_max]:
+                
+                    random_edge_number = random.randrange(1,3)
+                    
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] - self.dx
+                        y = self.position[-1][1]
+                    
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] - self.dy
+            
+                else:
+                    random_edge_number = random.randrange(1,4)
+                
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] - self.dx
+                        y = self.position[-1][1]
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0]
+                        y = self.position[-1][1] + self.dy
+                    elif random_edge_number == 3:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] - self.dx
+ 
+            self.position.append([x,y])
+        
+        elif random_number == 3:    # movement down ---------------
+            x = self.position[-1][0]
+            y = self.position[-1][1] - self.dy
+            
+            #### Test for lower boundary --------------
+            if y < self.y_min:
+            
+                if self.position[-1] == [self.x_min, self.y_min]:
+                
+                    random_edge_number = random.randrange(1,3)
+                   
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] + self.dx
+                        y = self.position[-1][1]
+                    
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] + self.dy
+                    
+                elif self.position[-1] == [self.x_max, self.y_min]:
+                
+                    random_edge_number = random.randrange(1,3)
+                    
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] - self.dx
+                        y = self.position[-1][1]
+                    
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] + self.dy
+            
+                else:
+                    random_edge_number = random.randrange(1,4)
+                
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] - self.dx
+                        y = self.position[-1][1]
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0]
+                        y = self.position[-1][1] + self.dy
+                    elif random_edge_number == 3:
+                        x = self.position[-1][0] + self.dx
+                        y = self.position[-1][1]
+            
+            self.position.append([x,y])
+        
+        elif random_number == 4:    # movement to left ---------------
+            x = self.position[-1][0] - self.dx
+            y = self.position[-1][1]
+            
+            #### Test for left boundary --------------
+            if x < self.x_min:
+            
+                if self.position[-1] == [self.x_min, self.y_min]:
+                
+                    random_edge_number = random.randrange(1,3)
+                   
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] + self.dx
+                        y = self.position[-1][1]
+                    
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] + self.dy
+                    
+                elif self.position[-1] == [self.x_min, self.y_max]:
+                
+                    random_edge_number = random.randrange(1,3)
+                    
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] + self.dx
+                        y = self.position[-1][1]
+                    
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] - self.dy
+            
+                else:
+                    random_edge_number = random.randrange(1,4)
+                
+                    if random_edge_number == 1:
+                        x = self.position[-1][0] + self.dx
+                        y = self.position[-1][1]
+                    elif random_edge_number == 2:
+                        x = self.position[-1][0]
+                        y = self.position[-1][1] + self.dy
+                    elif random_edge_number == 3:
+                        x = self.position[-1][0] 
+                        y = self.position[-1][1] - self.dx
+                
+            self.position.append([x,y])
+    
+
+test = RandomWalker()
+
+steps = 2000
+for i in range(steps):
+    test.random_motion()
+print('Number of steps: {a}' .format(a=steps))
+test.display()
+
+    
+
+
+
+
