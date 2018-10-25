@@ -1,6 +1,8 @@
 ### Draws the magnetic field lines of two long wires using the constant-value contours of the flux coordinate surface
-### The coordinate system is situated with the two long parallel wires extenting into the z-direction, this program then maps the magnetic field of the wires onto the x-y plane. 
-### In the definition of Afield(x,y), only one return operation can be used at a time. The difference between the two return values is just the directions of the currents in the two wires, parallel or anti-parallel. 
+### The coordinate system is situated with the two long parallel wires extenting into the z-direction, this program then 
+### maps the magnetic field of the wires onto the x-y plane. In the definition of Afield(x,y), only one return operation 
+### can be used at a time. The difference between the two return values is just the directions of the currents in the two 
+### wires, parallel or anti-parallel. 
 
 import numpy as np
 import matplotlib.pyplot as plt 
