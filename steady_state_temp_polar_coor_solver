@@ -8,13 +8,11 @@ from mpl_toolkits.mplot3d import Axes3D
 # Author: Tyler E. Bagwell
 
 # Purpose: This simple program solves and plots the solution to Laplace's equation 
-# in polar coordinates directly by using Numpy's matrix inversion method linalg.solve() 
-# method. 
-
+# in polar coordinates directly by using Numpy's matrix inversion method -- linalg.solve(). 
+ 
 # Solution: This program specfically solves the problem of finding the steady-state 
 # temperature distribution in a circular plate where the upper half is held at 100 and the lovwer
 # half is held at 0.
-
 
 # --- Gridding
 N = 30  # Number of grid points along r 
